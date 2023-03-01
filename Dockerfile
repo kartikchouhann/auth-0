@@ -1,23 +1,17 @@
-# Use an official Node.js runtime as a parent image
 FROM node:14-alpine
 
-# Set working directory to /app
-WORKDIR /usr/local/bin
+# Set the working directory to /app
+WORKDIR /app
 
-# Install the Auth0 Deploy CLI globally
-RUN npm install -g auth0-deploy-cli
+# Copy the package.json and package-lock.json files to the container
+COPY package*.json ./
 
-# Set environment variables
-ENV NODE_ENV production
-ENV NODE_OPTIONS --max_old_space_size=4096
+# Install dependencies
+RUN npm install -g auth0-cli && \
+    npm install --production
 
-# Add support for running as a non-root user in Azure DevOps
-RUN chown -R node:node /app
-USER node
+# Copy the extension files to the container
+COPY . .
 
-# Expose the port that the Auth0 Deploy CLI listens on
-EXPOSE 3000
-
-# Start the Auth0 Deploy CLI
-CMD ["/usr/local/bin/auth0-deploy-cli"]
-
+# Set the command to deploy the extension using the Auth0 Deploy CLI
+CMD ["auth0", "deploy", "--extension", "your-extension-name"]
