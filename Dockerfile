@@ -19,4 +19,5 @@ USER node
 EXPOSE 3000
 
 # Start the Auth0 Deploy CLI
-CMD ["auth0-deploy-cli"]
+CMD ["/usr/local/bin/auth0-deploy-cli"]
+
