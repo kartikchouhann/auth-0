@@ -1,20 +1,27 @@
+# Start from Node.js Alpine image
 FROM node:alpine
 
-# Set necessary environment variables for Alpine in Azure DevOps
-ENV NODE_OPTIONS=--openssl-legacy-provider
-ENV NODE_NO_WARNINGS=1
+# Install necessary packages
+RUN apk update && \
+    apk add --no-cache \
+      bash \
+      curl \
+      git \
+      jq \
+      openssl \
+      openssh-client
 
-# Disable IPv6 in the container
-RUN echo 'net.ipv6.conf.all.disable_ipv6 = 1' > /etc/sysctl.d/99-disable-ipv6.conf
-
-# Install Auth0 Deploy CLI
-RUN npm install -g auth0-deploy-cli
-
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy any necessary configuration files
-COPY config.json /app
+# Install auth0 deploy-cli
+RUN npm install -g auth0-deploy-cli
 
-# Set the entry point
-ENTRYPOINT ["auth0-deploy"]
+# Add environment variables for AzDO
+ENV NODE_OPTIONS="--openssl-legacy-provider"
+
+# Expose port if necessary
+# EXPOSE 8080
+
+# Default command to run when container starts
+CMD ["auth0-deploy-cli", "--version"]
