@@ -2,7 +2,7 @@
 FROM node:14-alpine
 
 # Set working directory to /app
-WORKDIR /app
+WORKDIR /usr/local/bin
 
 # Install the Auth0 Deploy CLI globally
 RUN npm install -g auth0-deploy-cli
